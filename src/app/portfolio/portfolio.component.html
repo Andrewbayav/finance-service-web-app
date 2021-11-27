@@ -1,0 +1,16 @@
+<div class="center-screen">
+    <mat-spinner *ngIf="!loaded"></mat-spinner>
+    <ngx-charts-bar-vertical *ngIf="loaded"
+      [view]="[1000,400]"
+      [results]="chartData"
+      [xAxisLabel]="'Instruments'"
+      [legendTitle]="'Investment Chart'"
+      [yAxisLabel]="'Sale'"
+      [legend]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxis]="true"
+      [yAxis]="true"
+      [gradient]="true">
+    </ngx-charts-bar-vertical>
+</div>
