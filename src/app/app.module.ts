@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { MatTableModule } from '@angular/material/table'
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     NgxChartsModule,
     HttpClientModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatTabsModule
   ],
   providers: [HttpClient],
   bootstrap: [AppComponent]
