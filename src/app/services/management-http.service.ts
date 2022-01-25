@@ -11,7 +11,8 @@ export class ManagementHttpService {
   constructor(public httpClient: HttpClient) { }
 
   requestTinkoffPortfolio(token: string): Observable<TinkoffPortfolioResponse> {
-    return this.httpClient.post<TinkoffPortfolioResponse>('http://localhost:8080/tinkoff/portfolio', { token });
+    let refresh = false;
+    return this.httpClient.post<TinkoffPortfolioResponse>('http://localhost:8080/tinkoff/portfolio', { token, refresh });
   }
 
 }
