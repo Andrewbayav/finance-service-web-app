@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  width: 75%;
+  margin-left: 12.5%;
+}
+
+.legend {
+  margin-left: 2.8125rem;
+}
+
+.item {
+  margin: 0 0.5rem 0.75rem 0;
+}
+
