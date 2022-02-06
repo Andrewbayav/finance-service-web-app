@@ -1,1 +1,49 @@
-<p>kafka works!</p>
+<div class="center-screen">
+  <table mat-table *ngIf="true" [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="ticker">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Ticker </th>
+      <td mat-cell *matCellDef="let element"> {{element.ticker}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cap">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Market Cap </th>
+      <td mat-cell *matCellDef="let element"> {{element.marketCap}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="enterpriseValue">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Enterprise Value </th>
+      <td mat-cell *matCellDef="let element"> {{element.enterpriseValue}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priceToBook">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> P/Bv </th>
+      <td mat-cell *matCellDef="let element"> {{element.priceToBook}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priceToSalesTrailing12Months">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> P/S (ttm) </th>
+      <td mat-cell *matCellDef="let element"> {{element.priceToSalesTrailing12Months}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="trailingPE">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Trailing P/E </th>
+      <td mat-cell *matCellDef="let element"> {{element.trailingPE}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dividendYield">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Dividend Yield </th>
+      <td mat-cell *matCellDef="let element"> {{element.dividendYield}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="recommendationMean">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Recommendation </th>
+      <td mat-cell *matCellDef="let element"> {{element.recommendationMean}} </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>

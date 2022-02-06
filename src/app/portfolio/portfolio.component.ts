@@ -3,7 +3,8 @@ import {ManagementHttpService} from "../services/management-http.service";
 import {environment} from "../../environments/environment";
 import {RingChartComponent} from "../charts/ring-chart/ring-chart.component";
 import {sum} from '@taiga-ui/cdk';
-
+import {Stock} from "../kafka/kafka.component";
+import {Utils} from "../Utils";
 
 @Component({
   selector: 'app-portfolio',
@@ -34,6 +35,12 @@ export class PortfolioComponent implements OnInit {
     'priceToBook', 'priceToSalesTrailing12Months', 'trailingPE', 'dividendYield', 'recommendationMean'];
   // table -----------------------------
 
+  // full-analytics-data
+
+  FULL_ELEMENT_DATA: Stock[] = [];
+
+  //--------------------
+
   value: number[] = [];
   labels: string[] = [];
   sum: number;
@@ -41,7 +48,7 @@ export class PortfolioComponent implements OnInit {
   getPortfolio() {
 
     this.managementService.requestTinkoffPortfolio(this.token).subscribe(res => {
-      debugger
+      // debugger
       let i = 1;
       // @ts-ignore
       res.forEach(el => {
@@ -60,13 +67,13 @@ export class PortfolioComponent implements OnInit {
           purchasePrice: el.averagePositionPrice,
           priceUsd: currentPrice,
           sumUSD: (el.balance * currentPrice).toFixed(2),
-          cap: el.marketCap == 0 ? this.replaceWithDash(el.marketCap) : this.convertToInternationalCurrencySystem(el.marketCap),
-          enterpriseValue: el.enterpriseValue == 0 ? this.replaceWithDash(el.enterpriseValue) : this.convertToInternationalCurrencySystem(el.enterpriseValue),
-          priceToBook: this.replaceWithDash(el.priceToBook),
-          priceToSalesTrailing12Months: this.replaceWithDash(el.priceToSalesTrailing12Months),
-          trailingPE: this.replaceWithDash(el.trailingPE),
-          dividendYield: this.replaceWithDash(el.dividendYield),
-          recommendationMean: this.replaceWithDash(el.recommendationMean),
+          cap: el.marketCap == 0 ? Utils.replaceWithDash(el.marketCap) : Utils.convertToInternationalCurrencySystem(el.marketCap),
+          enterpriseValue: el.enterpriseValue == 0 ? Utils.replaceWithDash(el.enterpriseValue) : Utils.convertToInternationalCurrencySystem(el.enterpriseValue),
+          priceToBook: Utils.replaceWithDash(el.priceToBook),
+          priceToSalesTrailing12Months: Utils.replaceWithDash(el.priceToSalesTrailing12Months),
+          trailingPE: Utils.replaceWithDash(el.trailingPE),
+          dividendYield: Utils.replaceWithDash(el.dividendYield),
+          recommendationMean: Utils.replaceWithDash(el.recommendationMean),
         }
         this.PORTFOLIO_TABLE.push(tableTmp);
         this.value.push(Number((el.balance * currentPrice).toFixed(2)));
@@ -87,10 +94,6 @@ export class PortfolioComponent implements OnInit {
     return (purchasePrice + expectedYield/balance).toFixed(2);
   }
 
-  replaceWithDash(number) {
-    return number == 0 ? '-' : number;
-  }
-
   getArrElementsSum(a: number[]) {
     let sum: number = 0;
     a.forEach(el => {
@@ -98,30 +101,4 @@ export class PortfolioComponent implements OnInit {
     })
     return sum;
   }
-
-  numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
-  convertToInternationalCurrencySystem (labelValue) {
-
-    // Nine Zeroes for Billions
-    return Math.abs(Number(labelValue)) >= 1.0e+9
-
-      ? (Math.abs(Number(labelValue)) / 1.0e+9).toFixed(2) + "B"
-      // Six Zeroes for Millions
-      : Math.abs(Number(labelValue)) >= 1.0e+6
-
-        ? (Math.abs(Number(labelValue)) / 1.0e+6).toFixed(2) + "M"
-        // Three Zeroes for Thousands
-        : Math.abs(Number(labelValue)) >= 1.0e+3
-
-          ? (Math.abs(Number(labelValue)) / 1.0e+3).toFixed(2) + "K"
-
-          : Math.abs(Number(labelValue));
-
-  }
-
-
-
 }

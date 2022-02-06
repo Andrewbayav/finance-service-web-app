@@ -1,14 +1,16 @@
 <mat-tab-group>
   <mat-tab label="Portfolio">
+
+    <div class="charts center-screen">
+      <div *ngIf="filtersLoaded | async">
+        <app-ring-chart [value] = "value" [labels] = "labels" [sum] = "sum"></app-ring-chart>
+      </div>
+    </div>
+
     <div class="center-screen">
       <mat-spinner *ngIf="!loaded"></mat-spinner>
 
       <table mat-table *ngIf="loaded" [dataSource]="ELEMENT_DATA" class="mat-elevation-z8">
-
-<!--        <ng-container matColumnDef="position">-->
-<!--          <th mat-header-cell class="header-text" *matHeaderCellDef> No. </th>-->
-<!--          <td mat-cell *matCellDef="let element"> {{element.position}} </td>-->
-<!--        </ng-container>-->
 
         <ng-container matColumnDef="name">
           <th mat-header-cell class="header-text" *matHeaderCellDef> Name </th>
@@ -34,7 +36,7 @@
           <th mat-header-cell class="header-text" *matHeaderCellDef> Summary</th>
           <td mat-cell *matCellDef="let element"> {{element.sumUSD}} </td>
         </ng-container>
-         'dividendYield', 'recommendationMean'];
+        'dividendYield', 'recommendationMean'];
 
         <ng-container matColumnDef="cap">
           <th mat-header-cell class="header-text" *matHeaderCellDef> Market Cap </th>
@@ -78,28 +80,18 @@
       </table>
     </div>
   </mat-tab>
-  <mat-tab label="Graph">
-    <mat-spinner *ngIf="!loaded"></mat-spinner>
-    <div *ngIf="filtersLoaded | async">
-      <div class="center-screen">
 
-        <app-ring-chart [value] = "value" [labels] = "labels" [sum] = "sum"></app-ring-chart>
-      </div>
-
-    </div>
-  </mat-tab>
-
-  <mat-tab label="Market Analysis">
+  <mat-tab label="Stock Analysis">
     <div class="center-screen font">
       <app-market-analisys></app-market-analisys>
     </div>
   </mat-tab>
 
-  <mat-tab label="Trading Robot">
+  <mat-tab label="Full Market Analysis">
     <div class="center-screen font">
-      Soon
-      <app-kafka></app-kafka>
+      <app-kafka [ELEMENT_DATA] = "FULL_ELEMENT_DATA"></app-kafka>
     </div>
   </mat-tab>
 
 </mat-tab-group>
+
