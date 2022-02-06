@@ -14,12 +14,16 @@ import {TuiLegendItemModule, TuiRingChartModule} from "@taiga-ui/addon-charts";
 import {TuiMoneyModule} from "@taiga-ui/addon-commerce";
 import { RingChartComponent } from './charts/ring-chart/ring-chart.component';
 import {CommonModule} from "@angular/common";
+import { MarketAnalisysComponent } from './market-analisys/market-analisys.component';
+import { KafkaComponent } from './kafka/kafka.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PortfolioComponent,
     RingChartComponent,
+    MarketAnalisysComponent,
+    KafkaComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +43,7 @@ import {CommonModule} from "@angular/common";
     TuiLegendItemModule,
     CommonModule
   ],
-  providers: [HttpClient, {provide: TUI_SANITIZER, useClass: NgDompurifySanitizer}],
+  providers: [ HttpClient, {provide: TUI_SANITIZER, useClass: NgDompurifySanitizer}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

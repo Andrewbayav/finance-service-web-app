@@ -39,38 +39,39 @@ export class PortfolioComponent implements OnInit {
   sum: number;
 
   getPortfolio() {
+
     this.managementService.requestTinkoffPortfolio(this.token).subscribe(res => {
       debugger
       let i = 1;
       // @ts-ignore
       res.forEach(el => {
-        if (el.instrumentType === 'Stock') {
-          // for chart
-          let tmp = {
-            name: el.name,
-            value: el.lots * this.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.lots)
-          }
-          this.portfolioData.push(tmp);
-          // for table
-          let tableTmp = {
-            name: el.name,
-            ticker: el.ticker,
-            purchasePrice: el.averagePositionPrice,
-            priceUsd: this.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.lots),
-            sumUSD: (el.lots * this.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.lots)).toFixed(2),
-            cap: el.marketCap == 0 ? this.replaceWithDash(el.marketCap) : this.convertToInternationalCurrencySystem(el.marketCap),
-            enterpriseValue: el.enterpriseValue == 0 ? this.replaceWithDash(el.enterpriseValue) : this.convertToInternationalCurrencySystem(el.enterpriseValue),
-            priceToBook: this.replaceWithDash(el.priceToBook),
-            priceToSalesTrailing12Months: this.replaceWithDash(el.priceToSalesTrailing12Months),
-            trailingPE: this.replaceWithDash(el.trailingPE),
-            dividendYield: this.replaceWithDash(el.dividendYield),
-            recommendationMean: this.replaceWithDash(el.recommendationMean),
-          }
-          this.PORTFOLIO_TABLE.push(tableTmp);
-          this.value.push(Number((el.lots * this.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.lots)).toFixed(2)));
-          this.labels.push(el.name);
-          i++;
+
+        // for chart
+        let currentPrice = this.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.balance, el.currency, el.rate)
+        let tmp = {
+          name: el.name,
+          value: el.balance * currentPrice
         }
+        this.portfolioData.push(tmp);
+        // for table
+        let tableTmp = {
+          name: el.name,
+          ticker: el.ticker,
+          purchasePrice: el.averagePositionPrice,
+          priceUsd: currentPrice,
+          sumUSD: (el.balance * currentPrice).toFixed(2),
+          cap: el.marketCap == 0 ? this.replaceWithDash(el.marketCap) : this.convertToInternationalCurrencySystem(el.marketCap),
+          enterpriseValue: el.enterpriseValue == 0 ? this.replaceWithDash(el.enterpriseValue) : this.convertToInternationalCurrencySystem(el.enterpriseValue),
+          priceToBook: this.replaceWithDash(el.priceToBook),
+          priceToSalesTrailing12Months: this.replaceWithDash(el.priceToSalesTrailing12Months),
+          trailingPE: this.replaceWithDash(el.trailingPE),
+          dividendYield: this.replaceWithDash(el.dividendYield),
+          recommendationMean: this.replaceWithDash(el.recommendationMean),
+        }
+        this.PORTFOLIO_TABLE.push(tableTmp);
+        this.value.push(Number((el.balance * currentPrice).toFixed(2)));
+        this.labels.push(el.name);
+        i++;
       })
       this.sum = this.getArrElementsSum(this.value);
       this.chartData = this.portfolioData;
@@ -80,8 +81,10 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
-  getCurrentPrice(purchasePrice, expectedYield, lots) {
-    return lots == 0 ? '-' : (purchasePrice + expectedYield/lots).toFixed(2);
+  getCurrentPrice(purchasePrice, expectedYield, balance, currency, rate) {
+    if (balance == 0) return '-';
+    if (currency === 'RUB') return ((purchasePrice + expectedYield/balance) / rate).toFixed(2)
+    return (purchasePrice + expectedYield/balance).toFixed(2);
   }
 
   replaceWithDash(number) {
