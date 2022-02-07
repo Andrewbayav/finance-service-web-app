@@ -20,4 +20,19 @@ export class Utils{
   static replaceWithDash(number) {
     return number == 0 ? '-' : number;
   }
+
+  static getArrElementsSum(a: number[]) {
+    let sum: number = 0;
+    a.forEach(el => {
+      sum += el;
+    })
+    return sum;
+  }
+
+  static getCurrentPrice(purchasePrice, expectedYield, balance, currency, rate) {
+    if (balance == 0) return '-';
+    if (currency === 'RUB') return ((purchasePrice + expectedYield/balance) / rate).toFixed(2)
+    return (purchasePrice + expectedYield/balance).toFixed(2);
+  }
+
 }

@@ -1,47 +1,32 @@
-<div *ngIf="loaded" class="charts center-screen chart-wrapper">
-  <div *ngIf="filtersLoaded | async">
-    <app-ring-chart [value] = "value" [labels] = "labels" [sum] = "sum"></app-ring-chart>
-  </div>
-  <div>
-    <div> Last refresh:</div>
-    <div> {{date | date: 'medium'}}</div>
-    <i class="fa fa-refresh" aria-hidden="true" (click)="getPortfolio(true)"></i>
-  </div>
+<div class="center-screen">
+  <mat-form-field appearance="legacy">
+    <mat-label>TCS Tickers</mat-label>
+    <input matInput placeholder="AAPL" #tickers>
+    <mat-icon matSuffix></mat-icon>
+    <mat-hint>separated by space</mat-hint>
+  </mat-form-field>
+
+  <button class="buttons" mat-raised-button (click)="getAnalysis(tickers.value)">Get info</button>
+  <button class="buttons" mat-raised-button (click)="clear()">Clear</button>
 </div>
 
-<div class="center-screen">
-  <mat-spinner *ngIf="!loaded"></mat-spinner>
-  <table mat-table *ngIf="loaded" [dataSource]="ELEMENT_DATA" class="mat-elevation-z8">
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell class="header-text" *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
+<div class="center-screen">
+  <table mat-table *ngIf="MARKET_ANALYSIS_DATA.length > 0" [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="ticker">
       <th mat-header-cell class="header-text" *matHeaderCellDef> Ticker </th>
       <td mat-cell *matCellDef="let element"> {{element.ticker}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="purchasePrice">
-      <th mat-header-cell *matHeaderCellDef> Purchase price </th>
-      <td mat-cell *matCellDef="let element"> {{element.purchasePrice}} </td>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
-
-    <ng-container matColumnDef="priceUsd">
-      <th mat-header-cell class="header-text" *matHeaderCellDef> Price UDS </th>
-      <td mat-cell *matCellDef="let element"> {{element.priceUsd}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="sumUSD">
-      <th mat-header-cell class="header-text" *matHeaderCellDef> Summary</th>
-      <td mat-cell *matCellDef="let element"> {{element.sumUSD}} </td>
-    </ng-container>
-    'dividendYield', 'recommendationMean'];
 
     <ng-container matColumnDef="cap">
       <th mat-header-cell class="header-text" *matHeaderCellDef> Market Cap </th>
-      <td mat-cell *matCellDef="let element"> {{element.cap}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.marketCap}} </td>
     </ng-container>
 
     <ng-container matColumnDef="enterpriseValue">
@@ -74,7 +59,9 @@
       <td mat-cell *matCellDef="let element"> {{element.recommendationMean}} </td>
     </ng-container>
 
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
   </table>
 </div>

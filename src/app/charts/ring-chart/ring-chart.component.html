@@ -6,7 +6,7 @@
   ></tui-ring-chart>
 
   <ng-template #content>
-    <tui-money [singleColor]="true" [value]="sum"></tui-money>
+    <tui-money [currency]=840 [singleColor]="true" [value]="sum"></tui-money>
     <div>Total</div>
   </ng-template>
 
@@ -19,7 +19,7 @@
       [active]="isItemActive(index)"
       (tuiHoveredChange)="onHover(index, $event)"
     >
-      <tui-money [singleColor]="true" [value]="value[index]"></tui-money>
+      <tui-money [singleColor]="true" [currency]=840 [value]="value[index]"></tui-money>
     </tui-legend-item>
   </div>
 </div>

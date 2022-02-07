@@ -20,7 +20,7 @@ export class RingChartComponent implements OnInit {
 
   // taiga ------------------------------
   activeItemIndex: any;
-
+  currency = '$';
   // sum = this.sumOfArr(this["value"]);
 
   public sumOfArr(a:number[]) {

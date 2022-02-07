@@ -2,7 +2,7 @@ table {
   width: 90%;
 }
 
-.header-text {
+.mat-header-cell {
   text-align: center;
 }
 
@@ -12,5 +12,16 @@ table {
 }
 
 .charts {
+  width: 100%;
   margin-top: 30px;
+}
+
+.chart-wrapper {
+  display: grid;
+  grid-template-columns: 70% 30%; /* 3 столбца */
+}
+
+.fa {
+  font-size: x-large;
+  margin-top: 5px;
 }

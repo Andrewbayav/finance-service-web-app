@@ -1,0 +1,23 @@
+<div class="center-screen">
+  <table mat-table *ngIf="DICTIONARY.length > 0" [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tcsTicker">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> TCS Ticker </th>
+      <td mat-cell *matCellDef="let element"> {{element.tcsTicker}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="yahooTicker">
+      <th mat-header-cell class="header-text" *matHeaderCellDef> Yahoo Ticker </th>
+      <td mat-cell *matCellDef="let element"> {{element.yahooTicker}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="dictionaryColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: dictionaryColumns;"></tr>
+
+  </table>
+</div>

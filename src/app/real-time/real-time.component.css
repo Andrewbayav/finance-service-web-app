@@ -1,0 +1,16 @@
+table.mat-table{
+  width: 900px;
+}
+
+.mat-header-cell {
+  text-align: center;
+}
+
+.ticker-wrapper {
+  display: grid;
+  grid-template-columns: 60% 20% 20%; /* 3 столбца */
+}
+
+.buttons {
+  margin-left: 10px;
+}

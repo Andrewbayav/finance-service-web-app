@@ -1,5 +1,15 @@
+<mat-form-field appearance="legacy">
+  <mat-label>Recommendation level</mat-label>
+  <input matInput placeholder="2.5" #recommendation>
+  <mat-icon matSuffix></mat-icon>
+</mat-form-field>
+
+<button class="buttons" mat-raised-button (click) = "startMessages(recommendation.value)">Search</button>
+<button class="buttons" mat-raised-button (click) = "stopMessages()">Stop</button>
+
 <div class="center-screen">
-  <table mat-table *ngIf="true" [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <table mat-table *ngIf="ELEMENT_DATA.length > 0" [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="ticker">
       <th mat-header-cell class="header-text" *matHeaderCellDef> Ticker </th>
@@ -47,3 +57,4 @@
 
   </table>
 </div>
+

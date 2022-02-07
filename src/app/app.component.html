@@ -1,4 +1,36 @@
 <tui-root>
-<app-portfolio></app-portfolio>
+  <mat-tab-group>
+    <mat-tab label="Portfolio">
+      <app-portfolio
+        [ELEMENT_DATA] = "ELEMENT_DATA"
+        [chartData] = "chartData"
+        [portfolioData]="portfolioData"
+        [date] = "date"
+        [value] = "value"
+        [labels] = "labels"
+        [sum] = "sum"
+        [date] = "date"
+      ></app-portfolio>
+    </mat-tab>
 
+    <mat-tab label="RealTime Search">
+      <div class="font real-time-wrapper">
+        <app-dictionary
+          [DICTIONARY] = "DICTIONARY"
+          [dictionaryColumns] = "dictionaryColumns">
+        </app-dictionary>
+        <app-real-time
+          [MARKET_ANALYSIS_DATA] = "MARKET_ANALYSIS_DATA"
+          [displayedColumns]="displayedColumns"
+        ></app-real-time>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Full Market Analysis">
+      <div class="center-screen font">
+        <app-kafka [ELEMENT_DATA] = "FULL_ELEMENT_DATA"></app-kafka>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
 </tui-root>

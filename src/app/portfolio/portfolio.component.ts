@@ -1,10 +1,8 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, Input, NgModule, OnInit} from '@angular/core';
 import {ManagementHttpService} from "../services/management-http.service";
 import {environment} from "../../environments/environment";
-import {RingChartComponent} from "../charts/ring-chart/ring-chart.component";
-import {sum} from '@taiga-ui/cdk';
-import {Stock} from "../kafka/kafka.component";
 import {Utils} from "../Utils";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-portfolio',
@@ -13,52 +11,39 @@ import {Utils} from "../Utils";
 })
 
 export class PortfolioComponent implements OnInit {
+  @Input() ELEMENT_DATA:any = [];
+  @Input() chartData:any = [];
+  @Input() portfolioData: any = [];
+  @Input() loaded: boolean = false;
+  @Input() date = null;
+  @Input() value: number[] = [];
+  @Input() labels: string[] = [];
+  @Input() sum: number;
 
   constructor(public managementService: ManagementHttpService) { }
-  positions = [];
-  token: string = '';
-
   ngOnInit(): void {
     this.token = environment.token;
-    this.getPortfolio();
+    this.getPortfolio(false);
   }
+
+  positions = [];
+  token: string = '';
   filtersLoaded: Promise<boolean>;
-
-  chartData:any = [];
-  portfolioData: any = [];
-  loaded: boolean = false;
-
-  // table -----------------------------
-  ELEMENT_DATA:any = [];
-  PORTFOLIO_TABLE:any = [];
   displayedColumns: string[] = [ 'name', 'ticker', 'purchasePrice', 'priceUsd', 'sumUSD', 'cap', 'enterpriseValue',
     'priceToBook', 'priceToSalesTrailing12Months', 'trailingPE', 'dividendYield', 'recommendationMean'];
-  // table -----------------------------
+  dataSource = new MatTableDataSource(this["ELEMENT_DATA"]);
 
-  // full-analytics-data
 
-  FULL_ELEMENT_DATA: Stock[] = [];
+  getPortfolio(refresh: boolean) {
+    if (refresh) this.clearDataSource();
 
-  //--------------------
-
-  value: number[] = [];
-  labels: string[] = [];
-  sum: number;
-
-  getPortfolio() {
-
-    this.managementService.requestTinkoffPortfolio(this.token).subscribe(res => {
-      // debugger
-      let i = 1;
+    this.managementService.requestTinkoffPortfolio(this.token, refresh).subscribe(res => {
       // @ts-ignore
       res.forEach(el => {
-
+        if (this.date === null) this.date = el.timestamp;
         // for chart
-        let currentPrice = this.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.balance, el.currency, el.rate)
-        let tmp = {
-          name: el.name,
-          value: el.balance * currentPrice
-        }
+        let currentPrice = Utils.getCurrentPrice(el.averagePositionPrice, el.expectedYield, el.balance, el.currency, el.rate)
+        let tmp = { name: el.name, value: el.balance * currentPrice}
         this.portfolioData.push(tmp);
         // for table
         let tableTmp = {
@@ -75,30 +60,29 @@ export class PortfolioComponent implements OnInit {
           dividendYield: Utils.replaceWithDash(el.dividendYield),
           recommendationMean: Utils.replaceWithDash(el.recommendationMean),
         }
-        this.PORTFOLIO_TABLE.push(tableTmp);
+        this.ELEMENT_DATA.push(tableTmp);
         this.value.push(Number((el.balance * currentPrice).toFixed(2)));
         this.labels.push(el.name);
-        i++;
       })
-      this.sum = this.getArrElementsSum(this.value);
+      this.sum = Utils.getArrElementsSum(this.value);
       this.chartData = this.portfolioData;
-      this.ELEMENT_DATA = this.PORTFOLIO_TABLE;
       this.loaded = true;
       this.filtersLoaded = Promise.resolve(true); // Setting the Promise as resolved after I have the needed data
+      this.refreshTable();
     });
   }
 
-  getCurrentPrice(purchasePrice, expectedYield, balance, currency, rate) {
-    if (balance == 0) return '-';
-    if (currency === 'RUB') return ((purchasePrice + expectedYield/balance) / rate).toFixed(2)
-    return (purchasePrice + expectedYield/balance).toFixed(2);
+  refreshTable() {
+    this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   }
 
-  getArrElementsSum(a: number[]) {
-    let sum: number = 0;
-    a.forEach(el => {
-      sum += el;
-    })
-    return sum;
+  clearDataSource() {
+    this.chartData = [];
+    this.ELEMENT_DATA = [];
+    this.sum = 0;
+    this.value = [];
+    this.labels = [];
+    this.loaded = false;
+    this.date = null;
   }
 }

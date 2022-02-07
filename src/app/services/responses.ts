@@ -5,3 +5,7 @@ export class TinkoffPortfolioResponse {
 export class TickersResponse {
   positions: any[];
 }
+
+export class DictionaryResponse {
+  positions: any[];
+}

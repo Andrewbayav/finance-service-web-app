@@ -3,18 +3,8 @@ import {Stomp} from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {Utils} from "../Utils";
-
-export interface Stock {
-  ticker: string;
-  recommendationMean: number;
-  returnOnEquity: number;
-  priceToBook: number;
-  enterpriseValue: any;
-  dividendYield: number;
-  trailingPE: number;
-  priceToSalesTrailing12Months: number;
-  marketCap: any;
-}
+import {ManagementHttpService} from "../services/management-http.service";
+import Stock from "../Stock";
 
 @Component({
   selector: 'app-kafka',
@@ -23,40 +13,37 @@ export interface Stock {
 })
 
 export class KafkaComponent implements OnInit {
+  ngOnInit() {}
+  ngOnDestroy() {
+    this.stopMessages();
+  }
   @Input() ELEMENT_DATA: Stock[];
 
   displayedColumns: string[] = [ 'ticker', 'cap', 'enterpriseValue',
     'priceToBook', 'priceToSalesTrailing12Months', 'trailingPE', 'dividendYield', 'recommendationMean'];
   dataSource = new MatTableDataSource(this["ELEMENT_DATA"]);
-
+  tickers_in_table: string = '';
   url = 'http://localhost:8080/websocket'
   client: any;
-  // private ELEMENT_DATA: any[];
 
-  ngOnInit() {
-  }
 
-  constructor(private changeDetectorRefs: ChangeDetectorRef){
-    this.connection();
-  }
+  constructor(public managementService: ManagementHttpService){ }
 
   refreshTable() {
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   }
 
-  connection(){
+  connection() {
     let ws = new SockJS(this.url);
     this.client = Stomp.over(ws);
     let that = this;
-
 
     this.client.connect({}, function(frame) {
       that.client.subscribe("/topic/angular", (message) => {
         if(message.body) {
           console.log(message.body);
           let tmp = JSON.parse(message.body);
-          if (tmp.ticker != '-') {
-
+          if (tmp.ticker != '-' && !that.tickers_in_table.includes(tmp.ticker)) {
             let tmpStock = {
               ticker: tmp.ticker,
               recommendationMean: tmp.recommendationMean,
@@ -68,13 +55,25 @@ export class KafkaComponent implements OnInit {
               priceToSalesTrailing12Months: Utils.replaceWithDash(tmp.priceToSalesTrailing12Months),
               marketCap: tmp.marketCap == 0 ? Utils.replaceWithDash(tmp.marketCap) : Utils.convertToInternationalCurrencySystem(tmp.marketCap),
             };
+            that.tickers_in_table += tmp.ticker;
             that.ELEMENT_DATA.push(tmpStock);
             that.ELEMENT_DATA.sort((a,b) => b.recommendationMean - a.recommendationMean);
             that.refreshTable();
           }
-
         }
       });
     });
+  }
+
+  startMessages(rec: string) {
+    this.connection();
+    this.ELEMENT_DATA = [];
+    this.tickers_in_table = '';
+    this.refreshTable();
+    this.managementService.requestKafkaStream(rec).subscribe(res => {});
+  }
+
+  stopMessages() {
+    this.managementService.stopKafkaStream().subscribe(res => {});
   }
 }
