@@ -1,27 +1,48 @@
-# FinanceServiceWebApp
+Истркуция по запуску:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.13.
+1. Копируем репозирории себе:
 
-## Development server
+    git@github.com:bay-av/tinkoff-invest-service-web-app.git
+    git@github.com:bay-av/tinkoff-invest-service.git
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+2. Вставляем token для Tinkoff OpenApi в файле {tinkoff-invest-service-web-app_base_dir}/src/environment/environment.ts
 
-## Code scaffolding
+3. Запускаем docker-compose окружение: Postgres, Kafka, Zookeeper:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    cd  {tinkoff-invest-service_base_dir}/compose
+    docker-compose up
+    
+4. Запускаем Spring-boot backend app:
+    
+    cd  {tinkoff-invest-service_base_dir}
+    mvn spring-boot:run
+        
+3. Запускаем angular-клиент
 
-## Build
+    ng serve
+    
+4. Открываем страницу клиента на http://localhost:4200. 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+5. Компонент 'Portfolio' - отображает состояние акций портфеля с базовыми мультипликаторами и показателем рекоммендаций с Yahoo Finance
+   
+   Компонент 'RealTime Search' - отображает справочник тикеров, требуемый в соответствии с тем, что тикеры на Российких биржах и на 
+   биржах, которыми оперирует Yahoo, могут отличаться. Здесь можно проверить акцию из справочника на мультипликаторы и рекоммендации.
+   
+   Компонент 'Full Market Analysis' - позволяет запустить поиск по всем акциям из справочника с указанием нижнеко порога по рекоммендациям
+   из Yahoo Finance.
+   
+TODO: 
+ - авторизация и аутентификация
+ - рассмотреть возможность подключения торгового робота с написанием к нему пользовательского интерфейса
+ - переделать поиск акций в компоненте 'Full Market Analysis' с сохранением данных об акциях и последующих анализом динамики изменения мультипликаторов
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+ДИСКЛЕЙМЕР:
 
-## Running end-to-end tests
+Данное программное обеспечение и информация, полученная из него, не являются индивидуальными инвестиционными рекомендациями, 
+и финансовые инструменты либо операции, упомянутые в нем, могут не соответствовать Вашему инвестиционному профилю и инвестиционным целям и ожиданиям. 
+Определение соответствия финансового инструмента либо операции Вашим интересам, инвестиционным целям, инвестиционному горизонту и уровню допустимого риска 
+является Вашей задачей. Разработчик не несет ответственности за возможные убытки в случае совершения операций либо инвестирования в финансовые инструменты, 
+упомянутые в данном приложении, и не рекомендует использовать указанную информацию в качестве единственного источника информации при принятии инвестиционного решения. 
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+   
